@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace DivideAndC.Spike
 {
     public class Program
     {
+        static List<int> _result;
+
         static void Main()
         {
             var result = GetAnswer(8);
@@ -14,48 +17,45 @@ namespace DivideAndC.Spike
 
         public static List<int> GetAnswer(int max)
         {
-            // reset global static _result!!
             _result = new List<int>();
-            var node = new Node {Left = 1, Right = max};
-            _result.Add(node.Left);
-            _result.Add(node.Right);
+            var rangeOfInts = new RangeOfInts { Left = 1, Right = max };
+            _result.Add(rangeOfInts.Left);
+            _result.Add(rangeOfInts.Right);
 
-            var nodelist = new Queue<Node>();
-            nodelist.Enqueue(node);
-            DivConq(nodelist);
+            var rangeOfIntsList = new List<RangeOfInts> { rangeOfInts };
+            DivConq(rangeOfIntsList);
             return _result;
         }
 
-        static List<int> _result; 
-
-        public static Queue<Node> DivConq(Queue<Node> nodeList)
+        public static List<RangeOfInts> DivConq(List<RangeOfInts> nodeList)
         {
             if (nodeList.Count > 0)
             {
-                Node currentNode = nodeList.Dequeue();
-                var midway = currentNode.Midway();
+                RangeOfInts currentRangeOfInts = nodeList.Last();
+                nodeList.Remove(nodeList.Last());
+
+                var midway = currentRangeOfInts.Midway();
                 _result.Add(midway);
 
-                if (midway < currentNode.Right - 1)
+                if (midway < currentRangeOfInts.Right - 1)
                 {
-                    var n = new Node { Left = midway, Right = currentNode.Right };
-                    nodeList.Enqueue(n);
+                    var n = new RangeOfInts { Left = midway, Right = currentRangeOfInts.Right };
+                    nodeList.Insert(0, n); // add to beginning of list
                 }
 
-                if (currentNode.Left < midway - 1)
+                if (currentRangeOfInts.Left < midway - 1)
                 {
-                    var n = new Node { Left = currentNode.Left, Right = midway };
-                    nodeList.Enqueue(n);
+                    var n = new RangeOfInts { Left = currentRangeOfInts.Left, Right = midway };
+                    nodeList.Insert(0, n);
                 }
 
-                if (currentNode.Left < midway) return DivConq(nodeList);
-                if (midway < currentNode.Right) return DivConq(nodeList);
+                if (currentRangeOfInts.Left < midway) return DivConq(nodeList);
+                if (midway < currentRangeOfInts.Right) return DivConq(nodeList);
             }
-            // done!
-            return null;
+            return null; 
         }
 
-        public class Node
+        public class RangeOfInts
         {
             public int Left { get; set; }
             public int Right { get; set; }
