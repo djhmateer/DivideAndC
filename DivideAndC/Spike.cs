@@ -8,26 +8,25 @@ namespace DivideAndC.Spike
     {
         static void Main()
         {
-            int max = 8;
-            var result = GetAnswer(max);
+            var result = GetAnswer(8);
             foreach (var number in result) Console.Write($"{number}, ");
         }
 
         public static List<int> GetAnswer(int max)
         {
-            // reset global _list - ahh!!
-            _list = new List<int>();
+            // reset global static _result!!
+            _result = new List<int>();
             var node = new Node {Left = 1, Right = max};
-            _list.Add(node.Left);
-            _list.Add(node.Right);
+            _result.Add(node.Left);
+            _result.Add(node.Right);
 
             var nodelist = new Queue<Node>();
             nodelist.Enqueue(node);
             DivConq(nodelist);
-            return _list;
+            return _result;
         }
 
-        static List<int> _list = new List<int>(); 
+        static List<int> _result; 
 
         public static Queue<Node> DivConq(Queue<Node> nodeList)
         {
@@ -35,7 +34,7 @@ namespace DivideAndC.Spike
             {
                 Node currentNode = nodeList.Dequeue();
                 var midway = currentNode.Midway();
-                _list.Add(midway);
+                _result.Add(midway);
 
                 if (midway < currentNode.Right - 1)
                 {
