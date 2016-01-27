@@ -15,55 +15,85 @@ namespace DivideAndC.Spike
             foreach (var number in result) Console.Write($"{number}, ");
         }
 
+        // problem - want to take a range of numbers eg 1..8
+        // and split if up in a specific way
+
+        // eg 1,2,3,4,5,6,7,8
+        // add to results the first number (1)
+        // add to results the last number (8)
+        // add to results the midway (4)
+        // look at RHS if there is one
+        // add to queue
+        // look at LHS if there is one
+        // add to queue
+
+        // now on RHS 4,6,8  **here**
+
         public static List<int> GetAnswer(int max)
         {
             _result = new List<int>();
-            var rangeOfInts = new RangeOfInts { Left = 1, Right = max };
-            _result.Add(rangeOfInts.Left);
-            _result.Add(rangeOfInts.Right);
+            var n = new Node(1, max);
 
-            var rangeOfIntsList = new List<RangeOfInts> { rangeOfInts };
-            DivConq(rangeOfIntsList);
+            _result.Add(n.Left);
+            _result.Add(n.Right);
+
+            // add a Node eg 1, 8 (midway 4)
+            var nodes = new List<Node> { n };
+            DivConq(nodes);
             return _result;
         }
 
-        public static List<RangeOfInts> DivConq(List<RangeOfInts> nodeList)
+        public static List<Node> DivConq(List<Node> nodes)
         {
-            if (nodeList.Count > 0)
+            if (nodes.Count > 0)
             {
-                RangeOfInts currentRangeOfInts = nodeList.Last();
-                nodeList.Remove(nodeList.Last());
+                Node currentNode = nodes.Last();
+                nodes.Remove(nodes.Last());
 
-                var midway = currentRangeOfInts.Midway();
+                var midway = currentNode.Midway;
                 _result.Add(midway);
 
-                if (midway < currentRangeOfInts.Right - 1)
+                // take RHS
+                if (midway < currentNode.Right - 1)
                 {
-                    var n = new RangeOfInts { Left = midway, Right = currentRangeOfInts.Right };
-                    nodeList.Insert(0, n); // add to beginning of list
+                    var n = new Node(midway, currentNode.Right);
+                    nodes.Insert(0, n); // add to beginning of list
                 }
 
-                if (currentRangeOfInts.Left < midway - 1)
+                // take LHS
+                if (currentNode.Left < midway - 1)
                 {
-                    var n = new RangeOfInts { Left = currentRangeOfInts.Left, Right = midway };
-                    nodeList.Insert(0, n);
+                    var n = new Node(currentNode.Left, midway);
+                    nodes.Insert(0, n);
                 }
 
-                if (currentRangeOfInts.Left < midway) return DivConq(nodeList);
-                if (midway < currentRangeOfInts.Right) return DivConq(nodeList);
+                if (nodes.Count != 0) return DivConq(nodes);
+                //if (currentNode.Left < midway) return DivConq(nodes);
+                //if (midway < currentNode.Right) return DivConq(nodes);
             }
             return null;
         }
 
-        public class RangeOfInts
+        public class Node
         {
-            public int Left { get; set; }
-            public int Right { get; set; }
+            public int Left { get; }
+            public int Right { get; }
+            public int Midway { get; }
 
-            public int Midway()
+            public Node(int left, int right)
             {
-                return (Right - Left) / 2 + Left;
+                Left = left;
+                Right = right;
+                Midway = (Right - Left)/2 + Left;
             }
+        }
+
+        [Fact]
+        public void OneToEight()
+        {
+            var result = GetAnswer(8);
+            // if 1,2,3,4,5,6,7,8 
+            Assert.Equal(new List<int> { 1, 8, 4, 6, 2, 7, 5, 3 }, result);
         }
 
 
@@ -83,13 +113,7 @@ namespace DivideAndC.Spike
             Assert.Equal(new List<int> { 1, 7, 4, 5, 2, 6, 3 }, result);
         }
 
-        [Fact]
-        public void OneToEight()
-        {
-            var result = GetAnswer(8);
-            // if 1,2,3,4,5,6,7,8 
-            Assert.Equal(new List<int> { 1, 8, 4, 6, 2, 7, 5, 3 }, result);
-        }
+       
 
         [Fact]
         public void OneToNine()
