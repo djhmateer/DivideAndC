@@ -11,7 +11,7 @@ namespace DivideAndC.Spike
 
         static void Main()
         {
-            var result = GetAnswer(8);
+            var result = GetAnswer(7);
             foreach (var number in result) Console.Write($"{number}, ");
         }
 
@@ -19,67 +19,54 @@ namespace DivideAndC.Spike
         // and split if up in a specific way
 
         // eg 1,2,3,4,5,6,7,8
-        // add to results the first number (1)
-        // add to results the last number (8)
-        // add to results the midway (4)
-        // look at RHS if there is one (4,6,8)
-        // add to list
-        // look at LHS if there is one (1,2,4)
-        // add to beginning of list
-
-        // take the last on the list (was the RHS 4,6,8)
-        // take RHS 
-        // add to beginning of list 6,7,8
-        // take LHS
-        // add to beginning of list 4,5,6
-
-        // take the last on the list (was original LHS 1,2,4)
-        // take RHS (2,3,4)
-        // add to list
-        // try LHS.. none!
-
 
         public static List<int> GetAnswer(int max)
         {
             _result = new List<int>();
-            var n = new Node(1, max);
+            var n = new Node(left: 1, right: max);
 
+            // start and end values are special cases, and the rest are simply midway points
+            // eg 1,2,3,4,5,6,7,8 should return 1, 8, 4, 6, 2, 7, 5, 3 
+            // so _result is now 1, 8
             _result.Add(n.Left);
             _result.Add(n.Right);
 
-            // add a Node eg 1, 8 (midway 4)
-            var nodes = new List<Node> { n };
-            DivConq(nodes);
+            // add a Node eg 1, 4, 8 (midway is 4)
+            var nodes = new Queue<Node>();
+            nodes.Enqueue(n);
+            DivConq(nodes: nodes, iteration: 1);
             return _result;
         }
 
-        public static List<Node> DivConq(List<Node> nodes)
+        public static Queue<Node> DivConq(Queue<Node> nodes, int iteration)
         {
             if (nodes.Count > 0)
             {
-                Node currentNode = nodes.Last();
-                nodes.Remove(nodes.Last());
+                Console.WriteLine($"iteration: {iteration}");
+                foreach (var n in nodes) Console.WriteLine($"{n.Left}, {n.Midway}, {n.Right}");
+
+                Node currentNode = nodes.Dequeue(); // take the last in queue (the oldest)
 
                 var midway = currentNode.Midway;
                 _result.Add(midway);
+                Console.WriteLine($"midway: {midway}");
+                Console.WriteLine();
 
                 // take RHS
                 if (midway < currentNode.Right - 1)
                 {
                     var n = new Node(midway, currentNode.Right);
-                    nodes.Insert(0, n); // add to beginning of list
+                    nodes.Enqueue(n); // add to start of queue
                 }
 
                 // take LHS
                 if (currentNode.Left < midway - 1)
                 {
                     var n = new Node(currentNode.Left, midway);
-                    nodes.Insert(0, n);
+                    nodes.Enqueue(n); // add to start of queue
                 }
 
-                if (nodes.Count != 0) return DivConq(nodes);
-                //if (currentNode.Left < midway) return DivConq(nodes);
-                //if (midway < currentNode.Right) return DivConq(nodes);
+                if (nodes.Count != 0) return DivConq(nodes, iteration + 1);
             }
             return null;
         }
@@ -94,7 +81,7 @@ namespace DivideAndC.Spike
             {
                 Left = left;
                 Right = right;
-                Midway = (Right - Left)/2 + Left;
+                Midway = (Right - Left) / 2 + Left;
             }
         }
 
@@ -123,7 +110,7 @@ namespace DivideAndC.Spike
             Assert.Equal(new List<int> { 1, 7, 4, 5, 2, 6, 3 }, result);
         }
 
-       
+
 
         [Fact]
         public void OneToNine()
