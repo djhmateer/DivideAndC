@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace DivideAndC.Spike
@@ -12,13 +11,11 @@ namespace DivideAndC.Spike
         static void Main()
         {
             var result = GetAnswer(7);
-            foreach (var number in result) Console.Write($"{number}, ");
+            foreach (var n in result) Console.Write($"{n}, ");
         }
 
-        // problem - want to take a range of numbers eg 1..8
-        // and split if up in a specific way
-
-        // eg 1,2,3,4,5,6,7,8
+        // Want to take a range of numbers and split if up in a specific way
+        // eg 1..8 should return 1, 8, 4, 6, 2, 7, 5, 3
 
         public static List<int> GetAnswer(int max)
         {
@@ -31,7 +28,7 @@ namespace DivideAndC.Spike
             _result.Add(n.Left);
             _result.Add(n.Right);
 
-            // add a Node eg 1, 4, 8 (midway is 4)
+            // add a starting Node ie 1, 4, 8 (midway is 4)
             var nodes = new Queue<Node>();
             nodes.Enqueue(n);
             DivConq(nodes: nodes, iteration: 1);
@@ -45,7 +42,7 @@ namespace DivideAndC.Spike
                 Console.WriteLine($"iteration: {iteration}");
                 foreach (var n in nodes) Console.WriteLine($"{n.Left}, {n.Midway}, {n.Right}");
 
-                Node currentNode = nodes.Dequeue(); // take the last in queue (the oldest)
+                Node currentNode = nodes.Dequeue(); // take the oldest in the queue
 
                 var midway = currentNode.Midway;
                 _result.Add(midway);
@@ -93,7 +90,6 @@ namespace DivideAndC.Spike
             Assert.Equal(new List<int> { 1, 8, 4, 6, 2, 7, 5, 3 }, result);
         }
 
-
         [Fact]
         public void OneToFive()
         {
@@ -109,8 +105,6 @@ namespace DivideAndC.Spike
             // if 1,2,3,4,5,6,7 
             Assert.Equal(new List<int> { 1, 7, 4, 5, 2, 6, 3 }, result);
         }
-
-
 
         [Fact]
         public void OneToNine()
