@@ -22,12 +22,22 @@ namespace DivideAndC.Spike
         // add to results the first number (1)
         // add to results the last number (8)
         // add to results the midway (4)
-        // look at RHS if there is one
-        // add to queue
-        // look at LHS if there is one
-        // add to queue
+        // look at RHS if there is one (4,6,8)
+        // add to list
+        // look at LHS if there is one (1,2,4)
+        // add to beginning of list
 
-        // now on RHS 4,6,8  **here**
+        // take the last on the list (was the RHS 4,6,8)
+        // take RHS 
+        // add to beginning of list 6,7,8
+        // take LHS
+        // add to beginning of list 4,5,6
+
+        // take the last on the list (was original LHS 1,2,4)
+        // take RHS (2,3,4)
+        // add to list
+        // try LHS.. none!
+
 
         public static List<int> GetAnswer(int max)
         {
