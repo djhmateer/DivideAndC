@@ -44,3 +44,4 @@ print n.right
 nodelist = Queue()
 nodelist.append(n)
 div_conq(nodelist)
+# DM
