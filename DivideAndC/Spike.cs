@@ -10,7 +10,7 @@ namespace DivideAndC.Spike
 
         static void Main()
         {
-            var result = GetAnswer(7);
+            var result = GetAnswer(1000);
             foreach (var n in result) Console.Write($"{n}, ");
         }
 
@@ -39,15 +39,15 @@ namespace DivideAndC.Spike
         {
             if (nodes.Count > 0)
             {
-                Console.WriteLine($"iteration: {iteration}");
-                foreach (var n in nodes) Console.WriteLine($"{n.Left}, {n.Midway}, {n.Right}");
+                //Console.WriteLine($"iteration: {iteration}");
+                //foreach (var n in nodes) Console.WriteLine($"{n.Left}, {n.Midway}, {n.Right}");
 
                 Node currentNode = nodes.Dequeue(); // take the oldest in the queue
 
                 var midway = currentNode.Midway;
                 _result.Add(midway);
                 Console.WriteLine($"midway: {midway}");
-                Console.WriteLine();
+                //Console.WriteLine();
 
                 // take RHS
                 if (midway < currentNode.Right - 1)
@@ -64,6 +64,8 @@ namespace DivideAndC.Spike
                 }
 
                 if (nodes.Count != 0) return DivConq(nodes, iteration + 1);
+                //if (currentNode.Left < midway) return DivConq(nodes, iteration + 1);
+                //if (midway < currentNode.Right) return DivConq(nodes, iteration + 1);
             }
             return null;
         }
@@ -120,6 +122,20 @@ namespace DivideAndC.Spike
             var result = GetAnswer(11);
             // if 1,2,3,4,5,6,7,8,9,10,11
             Assert.Equal(new List<int> { 1, 11, 6, 8, 3, 9, 7, 4, 2, 10, 5 }, result);
+        }
+
+        [Fact]
+        public void OneToTwenty()
+        {
+            var result = GetAnswer(20);
+            Assert.Equal(new List<int> { 1, 20, 10, 15, 5, 17, 12, 7, 3, 18, 16, 13, 11, 8, 6, 4, 2, 19, 14, 9 }, result);
+        }
+
+        [Fact]
+        public void OneToOneHundred()
+        {
+            var result = GetAnswer(100);
+            Assert.Equal(new List<int> { 1, 100, 50, 75, 25, 87, 62, 37, 13, 93, 81, 68, 56, 43, 31, 19, 7, 96, 90, 84, 78, 71, 65, 59, 53, 46, 40, 34, 28, 22, 16, 10, 4, 98, 94, 91, 88, 85, 82, 79, 76, 73, 69, 66, 63, 60, 57, 54, 51, 48, 44, 41, 38, 35, 32, 29, 26, 23, 20, 17, 14, 11, 8, 5, 2, 99, 97, 95, 92, 89, 86, 83, 80, 77, 74, 72, 70, 67, 64, 61, 58, 55, 52, 49, 47, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3 }, result);
         }
     }
 }

@@ -29,11 +29,15 @@ def div_conq (nodelist):
         if (current_node.left < midway-1):
             n=Node(current_node.left,midway)
             nodelist.append(n)
-        if (current_node.left<midway):
-            return div_conq(nodelist)
-        if (midway<current_node.right):
-            return div_conq(nodelist)
-tar_dist=8
+         
+        if (nodelist.length() != 0):
+            div_conq(nodelist)  
+             
+        #if (current_node.left<midway):
+            #return div_conq(nodelist)
+        #if (midway<current_node.right):
+            #return div_conq(nodelist)
+tar_dist=100
 n=Node(1,tar_dist)
 print n.left
 print n.right
